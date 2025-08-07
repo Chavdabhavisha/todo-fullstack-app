@@ -1,0 +1,9 @@
+Flask
+Flask-Cors
+Flask-PyMongo
+Flask-JWT-Extended
+requests
+google-auth
+google-auth-oauthlib
+Flask-Mail          # ✅ Add this for email feature
+python-dotenv       # ✅ Add this for .env support
