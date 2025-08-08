@@ -25,7 +25,7 @@ def create_app():
     app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
-    # 🔗 Enable CORS for frontend running on localhost:3000
+    # 🔗 Enable CORS for frontend (update origin later for production)
     CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
     # 🧩 Initialize extensions
@@ -39,7 +39,7 @@ def create_app():
 
     return app
 
-# 🚀 Run server
+# 🚀 Run server for production (Render)
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', port=5000)
