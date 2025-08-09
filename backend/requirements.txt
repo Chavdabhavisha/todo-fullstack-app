@@ -8,3 +8,5 @@ google-auth-oauthlib
 Flask-Mail
 python-dotenv      
 gunicorn
+pip install gunicorn
+pip freeze > requirements.txt
