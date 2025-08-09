@@ -11,8 +11,9 @@ function App() {
   const [editText, setEditText] = useState("");
   const editInputRef = useRef(null);
 
-  const API_BASE = "http://localhost:5000/api/todos";
-  const AUTH_API = "http://localhost:5000/api/auth/google-login";
+  const API_BASE = "https://todo-fullstack-application-enht.onrender.com/api/todos";
+const AUTH_API = "https://todo-fullstack-application-enht.onrender.com/api/auth/google-login";
+
 
   useEffect(() => {
     if (token) fetchTodos();
