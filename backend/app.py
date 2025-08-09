@@ -26,16 +26,8 @@ def create_app():
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
     # Enable CORS for frontend running on localhost:3000
-    CORS(
-    app,
-    resources={r"/api/*": {
-        "origins": [
-            "http://localhost:3000",
-            "https://todo-fullstack-application-enht.onrender.com"
-        ]
-    }},
-    supports_credentials=True
-)
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+
 
 
     # Initialize extensions
@@ -65,4 +57,5 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
+    
