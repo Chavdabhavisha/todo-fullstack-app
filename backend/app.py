@@ -26,7 +26,17 @@ def create_app():
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
     # Enable CORS for frontend running on localhost:3000
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+    CORS(
+    app,
+    resources={r"/api/*": {
+        "origins": [
+            "http://localhost:3000",
+            "https://todo-fullstack-application-enht.onrender.com"
+        ]
+    }},
+    supports_credentials=True
+)
+
 
     # Initialize extensions
     mongo.init_app(app)
