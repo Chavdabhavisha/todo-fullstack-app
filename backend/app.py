@@ -12,6 +12,7 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
 
+    # ===== Config =====
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
@@ -21,7 +22,7 @@ def create_app():
     app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
-    # Enable CORS
+    # ===== CORS =====
     CORS(
         app,
         resources={r"/api/*": {
@@ -33,25 +34,24 @@ def create_app():
         supports_credentials=True
     )
 
-    # ✅ Relax/remove COOP header so Google Sign-In postMessage works
+    # ===== Relax Security Headers for Google Sign-In =====
     @app.after_request
     def adjust_security_headers(response):
-        # Option 1: remove COOP completely
-        response.headers.pop("Cross-Origin-Opener-Policy", None)
-        response.headers.pop("Cross-Origin-Embedder-Policy", None)
-        
-        # Option 2: instead of removing, relax it
+        # Allow Google postMessage
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
         response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
         return response
 
+    # ===== Init Extensions =====
     mongo.init_app(app)
     jwt.init_app(app)
     mail.init_app(app)
 
+    # ===== Blueprints =====
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(todo_bp)
 
+    # ===== Test Route =====
     @app.route("/")
     def home():
         return jsonify({
@@ -68,4 +68,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
