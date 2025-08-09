@@ -6,5 +6,14 @@ services:
     startCommand: gunicorn app:app
     plan: free
     envVars:
-      - key: MONGO_URI
-      - key: JWT_SECRET_KEY
+     envVars:
+  - key: MONGO_URI
+  - key: JWT_SECRET_KEY
+  - key: GOOGLE_CLIENT_ID
+  - key: MAIL_SERVER
+  - key: MAIL_PORT
+  - key: MAIL_USE_TLS
+  - key: MAIL_USERNAME
+  - key: MAIL_PASSWORD
+  - key: MAIL_DEFAULT_SENDER
+
