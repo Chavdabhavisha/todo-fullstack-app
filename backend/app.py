@@ -37,6 +37,18 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(todo_bp)  # Already has /api/todos prefix in todo_bp
 
+    # 🏠 Root route for health check / interviewer view
+    @app.route("/")
+    def home():
+        return {
+            "status": "success",
+            "message": "Backend is running!",
+            "endpoints": {
+                "auth": "/api/auth",
+                "todos": "/api/todos"
+            }
+        }
+
     return app
 
 # 🚀 Run server
