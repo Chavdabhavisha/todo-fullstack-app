@@ -7,14 +7,17 @@ from extensions import mongo, jwt, mail
 from routes.auth_routes import auth_bp
 from routes.todo_routes import todo_bp
 
+# Load environment variables from .env
 load_dotenv()
 
 def create_app():
     app = Flask(__name__)
 
-    # ===== Config =====
+    # Configuration
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
+    # Mail Configuration
     app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
     app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT", 587))
     app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS", "True") == "True"
@@ -22,36 +25,19 @@ def create_app():
     app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
-    # ===== CORS =====
-    CORS(
-        app,
-        resources={r"/api/*": {
-            "origins": [
-                "http://localhost:3000",
-                "https://todo-fullstack-application-enht.onrender.com"
-            ]
-        }},
-        supports_credentials=True
-    )
+    # Enable CORS for frontend running on localhost:3000
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
-    # ===== Relax Security Headers for Google Sign-In =====
-    @app.after_request
-    def adjust_security_headers(response):
-        # Allow Google postMessage
-        response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
-        response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
-        return response
-
-    # ===== Init Extensions =====
+    # Initialize extensions
     mongo.init_app(app)
     jwt.init_app(app)
     mail.init_app(app)
 
-    # ===== Blueprints =====
+    # Register Blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(todo_bp)
 
-    # ===== Test Route =====
+    # Root route for health check
     @app.route("/")
     def home():
         return jsonify({
@@ -65,7 +51,8 @@ def create_app():
 
     return app
 
+# Run server
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
